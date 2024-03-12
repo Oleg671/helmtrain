@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  repository: grenzel671/mvn
+  pullPolicy: IfNotPresent
+  tag: "1"
+
+podLabels: {}
+
+service:
+  type: NodePort
+  port: 8080
+env:
+  JO: "-Dapp.env=staging"
+
