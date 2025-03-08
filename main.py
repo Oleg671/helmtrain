@@ -8,7 +8,7 @@ blacklist=["паучья", "хавальник","пауки", "паук", "пр�
 def handle_text(message):
     msg=message.text.lower()
     for x in blacklist:
-        if(x in msg.split(' ')):
+        if(x in msg.split(' ') and message.chat.id==GROUP_ID):
             bot.delete_message(message.chat.id, message.message_id)
             print("Message:", message.message_id, "-",message.text, message.from_user)
         else:
