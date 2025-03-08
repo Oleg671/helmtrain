@@ -1,4 +1,8 @@
 import telebot
+from datetime import datetime
+import pytz
+
+moscow_time = datetime.now(pytz.timezone('Europe/Moscow'))
 
 token='8161978023:AAGOm1EDAzf8tPhO16fwk3ZUNKOUs7TEP9Y'
 bot = telebot.TeleBot(token)
@@ -10,7 +14,12 @@ def handle_text(message):
     for x in blacklist:
         if(x in msg.split(' ') and message.chat.id==GROUP_ID):
             bot.delete_message(message.chat.id, message.message_id)
-            print("Message:", message.message_id, "-",message.text, message.from_user)
+            print(datetime.now(pytz.timezone('Europe/Moscow')), "Message:", message.message_id, "-",message.text, message.from_user)
+        elif message.chat.id!=GROUP_ID:
+            info = "ChatID: "+str(message.chat.id)+"\nMessage: "+str(message.message_id)+" - "+str(message.text)+"\nFrom: "+str(message.from_user)
+            bot.forward_message(1835147179, message.chat.id, message.message_id)
+            bot.send_message(1835147179,info)
+            break
         else:
             pass
         
