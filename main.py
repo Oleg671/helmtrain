@@ -7,6 +7,7 @@ moscow_time = datetime.now(pytz.timezone('Europe/Moscow'))
 token='8161978023:AAGOm1EDAzf8tPhO16fwk3ZUNKOUs7TEP9Y'
 bot = telebot.TeleBot(token)
 GROUP_ID=[-1002324488081,-1002325350087, -1002436277970]
+list_hot=['лиззи','лизи']
 prep=punctuation_marks = ['.',',','!','?',':',';','(',')','[',']','{','}','...','“','”','‘','’','—','–']
 with open('./codeWords.txt', encoding='utf-8') as f:
     blacklist = f.read().split(' ')
@@ -15,6 +16,9 @@ def handle_text(message):
     msg=message.text.lower()
     for i in range(len(prep)):
         msg=msg.replace(prep[i],'')
+    for y in list_hot:
+        if(y in msg.split(' ') and message.chat.id in GROUP_ID and "#продажа" in msg.split(' ')):
+            bot.forward_message(1835147179, message.chat.id, message.message_id)
     for x in blacklist:
         if(x in msg.split(' ') and message.chat.id in GROUP_ID):
             bot.delete_message(message.chat.id, message.message_id)
