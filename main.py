@@ -1,19 +1,31 @@
 import telebot
 from datetime import datetime
-import pytz
+import pytz, re
 
 moscow_time = datetime.now(pytz.timezone('Europe/Moscow'))
 
 token='8161978023:AAGOm1EDAzf8tPhO16fwk3ZUNKOUs7TEP9Y'
 bot = telebot.TeleBot(token)
-GROUP_ID=[-1002324488081,-1002325350087, -1002436277970]
-list_hot=['лиззи','лизи']
+GROUP_ID=[-1002324488081,-1002325350087, -1002436277970] #ПЛ болт ирис
+list_hot=['нюд']
+regex = r"(?:https?:\/\/(?:[\w-]+\.)+[a-z]{2,}|www\.[a-z0-9-]+.[\w-]+(?:[\/\\\?][^\s]*)?)"
 prep=punctuation_marks = ['.',',','!','?',':',';','(',')','[',']','{','}','...','“','”','‘','’','—','–']
 with open('./codeWords.txt', encoding='utf-8') as f:
     blacklist = f.read().split(' ')
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
     msg=message.text.lower()
+    links = re.findall(regex, msg)
+    todel=True
+    if links:
+        for i in range(len(links)):
+            if links[i]=="https://www.avito.ru":
+                todel=False
+            else:
+                todel=True
+        if todel:
+            bot.delete_message(message.chat.id, message.message_id)
+            print(datetime.now(pytz.timezone('Europe/Moscow')), "Message:", message.message_id, "-",message.text, message.from_user)
     for i in range(len(prep)):
         msg=msg.replace(prep[i],'')
     for y in list_hot:
