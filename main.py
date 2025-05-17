@@ -12,11 +12,30 @@ regex = r"(?:https?:\/\/(?:[\w-]+\.)+[a-z]{2,}|www\.[a-z0-9-]+.[\w-]+(?:[\/\\\?]
 prep=punctuation_marks = ['.',',','!','?',':',';','(',')','[',']','{','}','...','“','”','‘','’','—','–']
 with open('./codeWords.txt', encoding='utf-8') as f:
     blacklist = f.read().split(' ')
-@bot.message_handler(content_types=["text"])
+@bot.message_handler(content_types=['text'])
+@bot.channel_post_handler(content_types=['text'])
+@bot.edited_message_handler(content_types=['any'])
+def handle_edited_messages(message):
+    if message.from_user.id!=1087968824:
+        delfunc(message)
+def handle_channel_post(message):
+    if message.from_user.id!=1087968824:
+        delfunc(message)
 def handle_text(message):
+    if message.from_user.id!=1087968824:
+        delfunc(message)
+
+
+
+
+def delfunc(message):
     msg=message.text.lower()
-    links = re.findall(regex, msg)
+    # links = re.findall(regex, msg)
+    links =re.findall(regex, message.html_text)
+    if message.link_preview_options:
+        links.append(re.findall(regex,message.link_preview_options.url))
     todel=True
+    id = message.from_user.id
     if links:
         for i in range(len(links)):
             if links[i]=="https://www.avito.ru":
@@ -26,6 +45,7 @@ def handle_text(message):
         if todel:
             bot.delete_message(message.chat.id, message.message_id)
             print(datetime.now(pytz.timezone('Europe/Moscow')), "Message:", message.message_id, "-",message.text, message.from_user)
+            pass
     for i in range(len(prep)):
         msg=msg.replace(prep[i],'')
     for y in list_hot:
