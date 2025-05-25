@@ -33,9 +33,9 @@ def delfunc(message):
     # links = re.findall(regex, msg)
     links =re.findall(regex, message.html_text)
     if message.link_preview_options:
-        links.append(re.findall(regex,message.link_preview_options.url))
+        tmp=re.findall(regex,message.link_preview_options.url)
+        links+=re.findall(regex,message.link_preview_options.url)
     todel=True
-    id = message.from_user.id
     if links:
         for i in range(len(links)):
             if links[i]=="https://www.avito.ru":
