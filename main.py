@@ -16,7 +16,9 @@ with open('./codeWords.txt', encoding='utf-8') as f:
 @bot.channel_post_handler(content_types=['text'])
 @bot.edited_message_handler(content_types=['any'])
 def handle_edited_messages(message):
-    if message.from_user.id!=1087968824:
+    if message.chat.id==1835147179:
+        resend(message)  
+    elif message.from_user.id!=1087968824:
         delfunc(message)
 def handle_channel_post(message):
     if message.from_user.id!=1087968824:
@@ -25,12 +27,17 @@ def handle_text(message):
     if message.from_user.id!=1087968824:
         delfunc(message)
 
-
-
-
+def resend(message):
+    msg=message.text
+    inline = msg.find('\n')
+    id = msg[:inline] 
+    body = msg[inline + 1:]
+    bot.send_message(int(id),body)
+# def speektoMy(message):
+#     bot.send_message(id,"Тарифы BanHummer:\n\nБесплатный пробный период на 2 недели:\n▪︎Добавление до 5 вариантов ban-words.\n\nStandart на 1 месяц: 500 рублей\n▪︎Добавление до 20 вариантов ban-words;\n▪︎Защита чата от спама.\n\nVIP на 1 месяц: 1000 рублей\n▪︎Добавление до 100 вариантов ban-words;\n▪︎Возможность редактирования списка ban-words;\n▪︎Защита чата от спама;\n▪︎Возможность автоматического удаления ссылок.\n\nВыбрать и оплатить тариф -> /admin")
+#     print("SENDED\n")
 def delfunc(message):
     msg=message.text.lower()
-    # links = re.findall(regex, msg)
     links =re.findall(regex, message.html_text)
     if message.link_preview_options:
         tmp=re.findall(regex,message.link_preview_options.url)
@@ -44,7 +51,7 @@ def delfunc(message):
                 todel=True
         if todel:
             bot.delete_message(message.chat.id, message.message_id)
-            print(datetime.now(pytz.timezone('Europe/Moscow')), "Message:", message.message_id, "-",message.text, message.from_user)
+            # print(datetime.now(pytz.timezone('Europe/Moscow')), "Message:", message.message_id, "-",message.text, message.from_user)
             pass
     for i in range(len(prep)):
         msg=msg.replace(prep[i],'')
@@ -54,7 +61,7 @@ def delfunc(message):
     for x in blacklist:
         if(x in msg.split(' ') and message.chat.id in GROUP_ID):
             bot.delete_message(message.chat.id, message.message_id)
-            print(datetime.now(pytz.timezone('Europe/Moscow')), "Message:", message.message_id, "-",message.text, message.from_user)
+            # print(datetime.now(pytz.timezone('Europe/Moscow')), "Message:", message.message_id, "-",message.text, message.from_user)
         elif message.chat.id not in GROUP_ID:
             info = "ChatID: "+str(message.chat.id)+"\nMessage: "+str(message.message_id)+" - "+str(message.text)+"\nFrom: "+str(message.from_user)
             bot.forward_message(1835147179, message.chat.id, message.message_id)
